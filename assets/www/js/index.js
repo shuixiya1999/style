@@ -7,6 +7,14 @@ Ext.application({
      * it to the global Ext.Viewport instance.
      */
     launch: function() {
+    	/////////// for test ///////////////////
+    	document.addEventListener('click',function(){
+//    		aa=getComputedStyle(document.querySelector('table td')).fontSize
+//    		alert(aa);
+//    		alert('ddd');
+    	},false);
+    	
+    	
         //we send a config block into the Ext.Viewport.add method which will
         //create our tabpanel
         Ext.Viewport.add({
@@ -49,10 +57,73 @@ Ext.application({
 
             //next we define the items that will appear inside our tab panel
             items: [{
-                title: 'About',
-                html: 'about',
-                iconCls: 'info',
-                cls: 'card1'
+                title: '课程表',
+                iconCls: 'schedule',
+                cls: 'card1',
+                //event
+                listeners: {
+                	show: function(cont) {
+                		Ext.Ajax.request({
+                			url: 'data/queryStudentsCurriculum.js',
+//                			url: 'http://202.107.226.170/interface.do?json=[{%22skzs%22%3A%221%22%2C%22xh%22%3A%221101301307%22}]&m=queryStudentsCurriculum',
+                			params: {},
+                			success: function(r){
+                				var DAY = ['周日','周一','周二','周三','周四','周五','周六'],
+                					DH = Ext.DomHelper,
+                					tdTest = Ext.fly(cont.element.dom.querySelector('table>tbody>tr>td')),
+                					UNIT_H = tdTest.getHeight(true) - 2,
+                					UNIT_W = tdTest.getWidth(true) - 4;
+                				
+                				var o = JSON.parse(r.responseText);
+                				o.newsList.forEach(function(item){
+                					var locales = item.skdd.replace(/;(?=$)/,'').split(';'),
+                						schedules = item.sksj.split(';');
+                					locales.forEach(function(locale, index){
+                						var text = item.kcmc + '<br>@' +locale,
+                							schedule = schedules[index],
+                							day = DAY.indexOf(schedule.substr(0,2)),
+                							nths = schedule.match(/第.*?(?=节)/)[0].substr(1).split(','),
+                							nth = nths[0], n = nths.length,
+//                							tds = cont.element.dom.querySelectorAll('table>tbody>tr:nth-child(' + nth + ')>td');//warning
+                							tds = document.querySelector('table>tbody>tr:nth-child(' + nth + ')').querySelectorAll('td');
+                						
+                						DH.append(tds[day], {
+                							cls: 'courseWrap',
+                							children: [{
+                								cls: 'course',
+                								style: {
+                    								width: UNIT_W + 'px',
+                    								height: UNIT_H*n + 'px',
+                    								background: 'hsl('+Math.random()*360+',50%,50%)'
+                    							},
+                    							html: text
+                							}]
+                						});
+                					});
+                				});
+                				
+                			}
+                		});
+                    }
+                },
+                
+                //content
+                html: '<table class="schedule_grid"><thead>'+
+                		'<tr><th></th><td>日</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td></tr>'+
+                	'</thead><tbody>'+
+	                	'<tr><th>1</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>2</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>3</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>4</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>5</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>6</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>7</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>8</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>9</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>10</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>11</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+	                	'<tr><th>12</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
+                	'</tbody></table>'
             },{
                 title: '一卡通',
                 html: '<h1>Favorites Card</h1>',
@@ -65,7 +136,7 @@ Ext.application({
                 iconCls: 'score',
                 cls: 'card3',
             },{
-            	title: '同学们',
+            	title: '同学',
             	html: '<h1>Settings Card</h1>',
             	iconCls: 'team',
             	cls: 'card4'
@@ -79,6 +150,11 @@ Ext.application({
                 html: '<h1>User Card</h1>',
                 iconCls: 'user',
                 cls: 'card5'
+            },{
+                title: 'About',
+                html: 'about',
+                iconCls: 'info',
+                cls: 'card1'
             }]
         });
     }

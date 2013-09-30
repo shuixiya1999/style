@@ -1,9 +1,36 @@
-body{background-color:#333}p{font-size:24px;line-height:30px}.card1,.card2,.card3,.card4,.card5{padding:30px;font-size:72px}.x-phone .card1,.x-phone .card2,.x-phone .card3,.x-phone .card4,.x-phone .card5{font-size:36px}.x-phone p{font-size:16px;line-height:18px}.card1,.card2,.card3,.card4,.card5{color:rgba(0,0,0,0.2);text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;font-weight:bold}h1{font-weight:bold}.card1{background-color:#ccc}.card2{background-color:#5E99CC}.card3{background-color:#759E60}.card4{background-color:#9C744F}.card5{background-color:#926D9C}
+body{background-color:#333}
+p{font-size:24px;line-height:30px}
+.card1,.card2,.card3,.card4,.card5{font-size:14px}
+.x-phone .card1,.x-phone .card2,.x-phone .card3,.x-phone .card4,.x-phone .card5{/*font-size:36px*/}
+.x-phone p{font-size:16px;line-height:18px}
+.card1,.card2,.card3,.card4,.card5{color:rgba(0,0,0,0.2);text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;font-weight:bolder}
+h1{font-weight:bold}
+.card1{background-color:#eee}
+.card2{background-color:#5E99CC}
+.card3{background-color:#759E60}
+.card4{background-color:#9C744F}
+.card5{background-color:#926D9C}
 
 /* @class  */
-.card,.score,.talk{position: absolute;  top: 0;  right: 0;  bottom: 0;  left: 0;  text-align: center;  font-family: "Pictos";}
+.schedule.card,.score,.talk{position: absolute;  top: 0;  right: 0;  bottom: 0;  left: 0;  text-align: center;  font-family: "Pictos";}
 .x-tab .x-button-icon.talk:before{content: "q";}
 .x-tab .x-button-icon.score:before{content: "N";}
 .x-tab .x-button-icon.card:before{content: "r";}
+.x-tab .x-button-icon.schedule:before{content: "l";}
 
-.x-tab .x-button-label{font-size:12px;}
+/* override */
+.x-tabbar-inner .x-tab.x-tab-icon .x-button-label{font-size:1em;line-height: 15px;}
+.x-tabbar.x-docked-bottom{height:90px}
+.x-tab{width:113px;}
+.x-tabbar.x-docked-bottom .x-tab .x-button-icon{font-size:2.1em}
+
+/* schedule */
+.schedule_grid{width:100%}
+.schedule_grid th{width:18px;text-align:center}
+.schedule_grid thead tr{height:22px;background: #ddeef0;background: -moz-linear-gradient(top, #ddeef0 0%, #c2e1e4 85%, #c3e1e4 90%, #d7eaee 100%);
+	background: -webkit-linear-gradient(top, #ddeef0 0%,#c2e1e4 85%,#c3e1e4 90%,#d7eaee 100%);color:#71AED7}
+.schedule_grid tbody tr{height:48px;color:#333;}
+.schedule_grid tbody tr th,.schedule_grid tbody tr td{border:1px solid #ccc;}
+.schedule_grid tbody tr td{vertical-align: top;font-weight:500;}
+.schedule_grid .courseWrap{position:absolute;margin:2px;}
+.schedule_grid .course{display:table-cell;padding:0 7px;border-radius:5px;vertical-align: middle;}
