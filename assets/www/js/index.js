@@ -48,11 +48,11 @@ Ext.application({
             //this container. adding scrollable true means that all items in this tabpanel will
             //be scrollable unless otherwise specified in the item configuration
             defaults: {
-                scrollable: true
+//                scrollable: true
             },
 
             layout: {
-                animation: false
+//                animation: false
             },
 
             //next we define the items that will appear inside our tab panel
@@ -60,6 +60,7 @@ Ext.application({
                 title: '课程表',
                 iconCls: 'schedule',
                 cls: 'card1',
+//                scrollable: true,
                 //event
                 listeners: {
                 	show: function(cont) {
@@ -108,9 +109,14 @@ Ext.application({
                 },
                 
                 //content
-                html: '<table class="schedule_grid"><thead>'+
+                items: [{
+                	html: '<table class="schedule_grid"><thead>'+
                 		'<tr><th></th><td>日</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td></tr>'+
-                	'</thead><tbody>'+
+                	'</thead></table>'
+                },{
+                	scrollable: true,
+                	height: '100%',
+                	html: '<table class="schedule_grid"><tbody>'+
 	                	'<tr><th>1</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
 	                	'<tr><th>2</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
 	                	'<tr><th>3</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
@@ -124,9 +130,64 @@ Ext.application({
 	                	'<tr><th>11</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
 	                	'<tr><th>12</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'+
                 	'</tbody></table>'
+                }]
             },{
                 title: '一卡通',
-                html: '<h1>Favorites Card</h1>',
+//                html: '<h1>Favorites Card</h1>',
+                items: [{
+                	xtype: 'navigationview',
+                	height: '100%',
+                	defaultBackButtonText: '返回',
+                	navigationBar: {
+//                	    ui: 'sencha'
+                	},
+                	items: [{
+                        title: '一卡通',
+                        items: [{
+                            xtype: 'button',
+                            text: '余额查询',
+                            handler: function(btn) {
+                            	var view = btn.parent.parent;
+                                view.push({
+                                    title: '我还有多少钱?',
+                                    cls: 'card-total',
+                                    html: '查询中...'
+                                });
+                                
+                                //todo
+                                //反应过慢, 网速慢, 事件, 终止ajax
+                                
+                                // search
+                                Ext.Ajax.request({
+                                	url: 'data/myEasyCard.js',
+                                	params: {},
+                                	success: function(r){
+                                		var o = JSON.parse(r.responseText),
+                                			ye = o.easyCard.ye;
+                                		aaaa = view.getAt(2)
+                                		view.getAt(2).setHtml(ye);
+                                	}
+                                });
+                            }
+                        },{
+                        	xtype: 'button',
+                            text: '明细查询',
+                            handler: function(btn) {
+                            	var view = btn.parent.parent;
+                                view.push({
+                                    title: '钱到哪里去了?',
+                                    items: [{
+                                    	html: 'bar'
+                                    },{
+                                    	scrollable: true,
+                                    	height: '100%',
+                                    	html: 'content'
+                                    }]
+                                });
+                            }
+                        }]
+                    }]
+                }],
                 iconCls: 'card',
                 cls: 'card2',
                 badgeText: '4'
