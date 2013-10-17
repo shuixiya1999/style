@@ -3,7 +3,7 @@ p{font-size:24px;line-height:30px}
 .card1,.card2,.card3,.card4,.card5{font-size:14px}
 .x-phone .card1,.x-phone .card2,.x-phone .card3,.x-phone .card4,.x-phone .card5{/*font-size:36px*/}
 .x-phone p{font-size:16px;line-height:18px}
-.card1,.card2,.card3,.card4,.card5{color:rgba(0,0,0,0.2);text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;font-weight:bolder}
+.card1,.card2,.card3,.card4,.card5{text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;font-weight:bolder}
 h1{font-weight:bold}
 .card1{background-color:#eee}
 .card2{background-color:#5E99CC}
@@ -38,3 +38,4 @@ h1{font-weight:bold}
 
 /* card */
 .card-total .x-innerhtml {padding:30px;font-size: 3em;}
+.card-detail-lbl{line-height: 100px;}

@@ -14,6 +14,28 @@ Ext.application({
 //    		alert('ddd');
     	},false);
     	
+    	Ext.Date.monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    	
+    	var fmt = 'm/d/Y',
+    	picker = Ext.widget('datepicker',{
+        	hidden: true,
+        	cancelButton: '取消',
+        	doneButton: {
+        		text: '完成',
+        		handler: function(){
+        			var date = picker.getValue(true);
+        			picker.btn.setText(Ext.Date.format(date, fmt));
+        		}
+        	}
+//        	slotOrder: ['year','month','day']
+        }),
+    	pickerFn = function(b){
+			picker.btn = b;
+			picker.setValue(Ext.Date.parse(b.getText(), fmt));
+			picker.show();
+		},from = Ext.Date.format(new Date(new Date()-1000*3600*24*7), fmt),
+		to = Ext.Date.format(new Date, fmt);
+    	
     	
         //we send a config block into the Ext.Viewport.add method which will
         //create our tabpanel
@@ -164,7 +186,6 @@ Ext.application({
                                 	success: function(r){
                                 		var o = JSON.parse(r.responseText),
                                 			ye = o.easyCard.ye;
-                                		aaaa = view.getAt(2)
                                 		view.getAt(2).setHtml(ye);
                                 	}
                                 });
@@ -177,12 +198,49 @@ Ext.application({
                                 view.push({
                                     title: '钱到哪里去了?',
                                     items: [{
-                                    	html: 'bar'
+                                    	layout: 'hbox',
+                                    	height: 100,
+                                    	items: [{
+                                    		flex: 1,
+                                    		cls: 'card-detail-lbl',
+                                    		html: '从'
+                                    	},{
+                                    		xtype: 'button',
+                                    		text: from,
+                                    		flex: 2,
+                                    		margin: '17 10',
+                                    		handler: pickerFn
+                                    	},{
+                                    		flex: 1,
+                                    		cls: 'card-detail-lbl',
+                                    		html: '到'
+                                    	},{
+                                    		xtype: 'button',
+                                    		text: to,
+                                    		flex: 2,
+                                    		margin: '17 10',
+                                    		handler: pickerFn
+                                    	},{
+                                    		xtype: 'button',
+                                    		text: 'search',
+                                    		flex: 1,
+                                    		margin: '17 10',
+                                    		handler: function(b){
+                                    		}
+                                    	}]
                                     },{
                                     	scrollable: true,
                                     	height: '100%',
+                                    	listeners: {
+                                    		initialize: function(c){
+                                    			ccc = c;
+                                    			c.element.on('tap', function(){
+                                    				alert('ddd');
+                                    			});
+                                    		}
+                                    	},
                                     	html: 'content'
-                                    }]
+                                    },picker]
                                 });
                             }
                         }]
