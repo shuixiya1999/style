@@ -1,9 +1,7 @@
 body{background-color:#333}
-p{font-size:24px;line-height:30px}
 .card1,.card2,.card3,.card4,.card5{font-size:14px}
 .x-phone .card1,.x-phone .card2,.x-phone .card3,.x-phone .card4,.x-phone .card5{/*font-size:36px*/}
-.x-phone p{font-size:16px;line-height:18px}
-.card1,.card2,.card3,.card4,.card5{text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;font-weight:bolder}
+.card1,.card2,.card3,.card4,.card5{text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;}
 h1{font-weight:bold}
 .card1{background-color:#eee}
 .card2{background-color:#5E99CC}
@@ -27,15 +25,25 @@ h1{font-weight:bold}
 
 /* schedule */
 .schedule_grid{width:100%}
+.schedule_grid thead{font-weight:bolder}
 .schedule_grid th{width:18px;text-align:center}
 .schedule_grid thead tr{height:22px;background: #ddeef0;background: -moz-linear-gradient(top, #ddeef0 0%, #c2e1e4 85%, #c3e1e4 90%, #d7eaee 100%);
 	background: -webkit-linear-gradient(top, #ddeef0 0%,#c2e1e4 85%,#c3e1e4 90%,#d7eaee 100%);color:#71AED7}
 .schedule_grid tbody tr{height:48px;color:#333;}
 .schedule_grid tbody tr th,.schedule_grid tbody tr td{border:1px solid #ccc;}
-.schedule_grid tbody tr td{vertical-align: top;font-weight:500;}
+.schedule_grid tbody tr td{vertical-align: top;}
 .schedule_grid .courseWrap{position:absolute;margin:2px;}
-.schedule_grid .course{display:table-cell;padding:0 7px;border-radius:5px;vertical-align: middle;}
+.schedule_grid .course{display:table-cell;padding:0 7px;border-radius:5px;vertical-align: middle;color:#eee;}
 
 /* card */
 .card-total .x-innerhtml {padding:30px;font-size: 3em;}
 .card-detail-lbl{line-height: 100px;}
+.card-detail-block{width:330px;margin:9px auto;padding:8px 12px;border:1px solid #aaa;font-size:1.4em;line-height:1.4em;text-align:left;color:#797979}
+.card-detail-block .jye{position: absolute;color:#333;}
+.card-detail-block .kye{text-align:right}
+.date .x-button-label{padding-right:50px;}
+.date-month{display:inline-block;font-size: 1.5em;line-height: 1.1em;color:#777;font-weight: 500;}
+.date-day{position: absolute;display:inline-block;margin-left:10px;font-size: 2.6em;line-height: 1.3em;color:#777;font-weight: 500;}
+.x-button .x-button-icon.search{font-size:2em;}
+
+
