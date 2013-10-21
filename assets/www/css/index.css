@@ -27,8 +27,11 @@ h1{font-weight:bold}
 .schedule_grid{width:100%}
 .schedule_grid thead{font-weight:bolder}
 .schedule_grid th{width:18px;text-align:center}
-.schedule_grid thead tr{height:22px;background: #ddeef0;background: -moz-linear-gradient(top, #ddeef0 0%, #c2e1e4 85%, #c3e1e4 90%, #d7eaee 100%);
-	background: -webkit-linear-gradient(top, #ddeef0 0%,#c2e1e4 85%,#c3e1e4 90%,#d7eaee 100%);color:#71AED7}
+.schedule_grid thead tr{height:22px;
+	background: #ddeef0;background: -moz-linear-gradient(top, #ddeef0 0%, #c2e1e4 85%, #c3e1e4 90%, #d7eaee 100%);
+	background: -webkit-gradient(linear,center top,center bottom, from(#ddeef0),color-stop(85%,#c2e1e4),color-stop(90%,#c3e1e4),to(#d7eaee));
+	background: -webkit-linear-gradient(top, #ddeef0 0%,#c2e1e4 85%,#c3e1e4 90%,#d7eaee 100%);
+	color:#71AED7}
 .schedule_grid tbody tr{height:48px;color:#333;}
 .schedule_grid tbody tr th,.schedule_grid tbody tr td{border:1px solid #ccc;}
 .schedule_grid tbody tr td{vertical-align: top;}

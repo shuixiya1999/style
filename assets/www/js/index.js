@@ -73,6 +73,31 @@
 	                }]
 	            });
 	        };
+	        
+	        var termPicker = Ext.widget('picker', {
+	            doneButton: '完成',
+	            cancelButton: '取消',
+	            listeners: {
+	            	change: termPickerFn
+	            },
+	            slots: [
+	                {
+	                    name : 'limit_speed',
+	                    title: 'Speed',
+	                    data : [
+	                        {text: '2013-2014 第1学期', value: 50},
+	                        {text: '2012-2013 第2学期', value: 100},
+	                        {text: '2012-2013 第1学期', value: 200},
+	                        {text: '2011-2012 第2学期', value: 200},
+	                        {text: '2011-2012 第1学期', value: 200},
+	                        {text: '2010-2011 第2学期', value: 200},
+	                        {text: '2010-2011 第1学期', value: 200},
+	                        {text: '2009-2010 第2学期', value: 200},
+	                        {text: '2009-2010 第1学期', value: 300}
+	                    ]
+	                }
+	            ]
+	        });
 	    	
 	        //we send a config block into the Ext.Viewport.add method which will
 	        //create our tabpanel
@@ -152,9 +177,25 @@
 	                }]
 	            },{
 	                title: '成绩',
-	                html: '<h1>Downloads Card</h1>',
 	                iconCls: 'score',
 	                cls: 'card3',
+	                items: [{
+	                	xtype: 'titlebar',
+	                	docked: 'top',
+	                	title: '给我查查成绩',
+	                	items: [{
+	                		text: '选择学期',
+	                		align: 'right',
+	                		handler: function(){
+	                			termPicker.show();
+	                		}
+	                	}]
+	                },{
+	                	xtype: 'list',
+	                	height: '100%',
+	                	itemTpl: '{aa}',
+	                	store: store
+	                }]
 	            },{
 	            	title: '同学',
 	            	html: '<h1>Settings Card</h1>',
@@ -185,6 +226,13 @@
 	Ext.util.Format.myDate = function(timeStamp){
 		return this.date(new Date(timeStamp), 'Y-m-d H:i:s');
 	};
+	
+	Ext.define('Score', {
+        extend: 'Ext.data.Model',
+        config: {
+            fields: ['kcmc', 'cj']
+        }
+    });
 	
 	var date2str = function(date){
 		return '<span class="date-month">'+(date.getMonth()+1)+'月<br>'+date.getFullYear()+
@@ -286,6 +334,22 @@
         		tpl.overwrite(view.innerHtmlElement, list);
         	}
         });
-	};
+	},
+	termPickerFn = function(p, value){
+		Ext.Ajax.request({
+        	url: 'data/searchAchievement.js',
+        	params: {},
+        	success: function(r){
+        		var o = JSON.parse(r.responseText),
+        			list = o.achievementList;
+        	}
+        });
+    },store = Ext.create('Ext.data.Store', {
+		model: 'Score',
+		
+		data: [
+		       { kcmc: 'Jason',   cj: 'Johnston'}
+		]
+    });
 	
 })()
