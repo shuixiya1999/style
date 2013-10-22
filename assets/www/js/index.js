@@ -214,7 +214,7 @@
 	            	title: '同学',
 	            	html: '<h1>开发中</h1>',
 	            	iconCls: 'team',
-	            	cls: 'card4'
+	            	cls: 'card3'
 	            },{
 	                title: '讨论区',
 	                html: '<h1>发开中</h1>',
@@ -447,4 +447,25 @@
 		model: 'Score'
     });
 	
+	//login
+	window.login = function(){
+		var usr = document.getElementById('usr').value,
+			pwd = document.getElementById('pwd').value;
+		if(usr !== ''){
+			Ext.Ajax.request({
+				url: 'data/getIdentityUser.js',
+				params:{
+					json: Ext.encode([{
+						a:'a'
+					}]),
+					m: 'getIdentityUser'
+				},
+				disableCaching: false,
+				success: function(r){
+					var o = JSON.parse(r.responseText),
+        				user = o.user;
+				}
+			});
+		}
+	};
 })()
