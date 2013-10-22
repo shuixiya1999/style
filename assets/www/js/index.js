@@ -1,8 +1,9 @@
 (function(){
+	var ID = '1101301307';
 	Ext.application({
 	    launch: function() {
 	    	var picker = Ext.widget('datepicker',{
-	        	yearFrom: 1995,
+	        	yearFrom: 2004,
 	        	cancelButton: '取消',
 	        	doneButton: {
 	        		text: '完成',
@@ -41,6 +42,7 @@
 	                	},{
 	                		xtype: 'button',
 	                		cls: 'date',
+	                		id: 'start',
 	                		date: fromDate,
 	                		text: from,
 	                		flex: 2,
@@ -53,6 +55,7 @@
 	                	},{
 	                		xtype: 'button',
 	                		cls: 'date',
+	                		id: 'end',
 	                		date: toDate,
 	                		text: to,
 	                		flex: 2,
@@ -82,18 +85,18 @@
 	            },
 	            slots: [
 	                {
-	                    name : 'limit_speed',
-	                    title: 'Speed',
+	                    name : 'term',
+	                    title: 'Term',
 	                    data : [
-	                        {text: '2013-2014 第1学期', value: 50},
-	                        {text: '2012-2013 第2学期', value: 100},
-	                        {text: '2012-2013 第1学期', value: 200},
-	                        {text: '2011-2012 第2学期', value: 200},
-	                        {text: '2011-2012 第1学期', value: 200},
-	                        {text: '2010-2011 第2学期', value: 200},
-	                        {text: '2010-2011 第1学期', value: 200},
-	                        {text: '2009-2010 第2学期', value: 200},
-	                        {text: '2009-2010 第1学期', value: 300}
+	                        {text: '2013-2014 第1学期', value: '2013-2014 第1学期,2013-2014,1'},
+	                        {text: '2012-2013 第2学期', value: '2012-2013 第2学期,2012-2013,2'},
+	                        {text: '2012-2013 第1学期', value: '2012-2013 第1学期,2012-2013,1'},
+	                        {text: '2011-2012 第2学期', value: '2011-2012 第2学期,2011-2012,2'},
+	                        {text: '2011-2012 第1学期', value: '2011-2012 第1学期,2011-2012,1'},
+	                        {text: '2010-2011 第2学期', value: '2010-2011 第2学期,2010-2011,2'},
+	                        {text: '2010-2011 第1学期', value: '2010-2011 第1学期,2010-2011,1'},
+	                        {text: '2009-2010 第2学期', value: '2009-2010 第2学期,2009-2010,2'},
+	                        {text: '2009-2010 第1学期', value: '2009-2010 第1学期,2009-2010,1'}
 	                    ]
 	                }
 	            ]
@@ -178,10 +181,16 @@
 	            },{
 	                title: '成绩',
 	                iconCls: 'score',
+	                id: 'score',
 	                cls: 'card3',
+	                masked: {
+	                    xtype: 'loadmask',
+	                    hidden: true,
+	                    message: '查询中...'
+	                },
 	                items: [{
 	                	xtype: 'titlebar',
-	                	docked: 'top',
+	                	id: 'score-title',
 	                	title: '给我查查成绩',
 	                	items: [{
 	                		text: '选择学期',
@@ -192,34 +201,44 @@
 	                	}]
 	                },{
 	                	xtype: 'list',
+	                	id: 'score-list',
 	                	height: '100%',
-	                	itemTpl: '{aa}',
+	                	cls: 'score-list',
+	                	itemTpl: '<div class="score-lbl">{kcmc}:</div> {cj}',
+	                	striped: true,
+	                	deferEmptyText: false,
+	                	emptyText: '没有数据',
 	                	store: store
 	                }]
 	            },{
 	            	title: '同学',
-	            	html: '<h1>Settings Card</h1>',
+	            	html: '<h1>开发中</h1>',
 	            	iconCls: 'team',
 	            	cls: 'card4'
 	            },{
 	                title: '讨论区',
-	                html: '<h1>Settings Card</h1>',
+	                html: '<h1>发开中</h1>',
 	                iconCls: 'talk',
 	                cls: 'card4'
 	            },{
 	                title: 'User',
-	                html: '<h1>User Card</h1>',
+	                html: '<h1>登录</h1>'+
+	                	'<input id="usr" type="text" class="txt" placeholder="用户名" />'+
+	                	'<input id="pwd" type="password" class="txt" placeholder="密码" />'+
+	                	'<input type="button" value="登录" onclick="login()" />',
 	                iconCls: 'user',
 	                cls: 'card5'
 	            },{
 	                title: 'About',
-	                html: 'about',
+	                html: '<h1>about</h1>',
 	                iconCls: 'info',
-	                cls: 'card1'
+	                cls: 'card6'
 	            }]
 	        });
+	        
+	        Ext.getCmp('score').setMasked(false);
 	    }//launch
-	});
+	});// application done!
 	
 	Ext.Date.monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 	
@@ -233,6 +252,8 @@
             fields: ['kcmc', 'cj']
         }
     });
+	
+	var URL = 'http://202.107.226.170/interface.do';
 	
 	var date2str = function(date){
 		return '<span class="date-month">'+(date.getMonth()+1)+'月<br>'+date.getFullYear()+
@@ -250,9 +271,16 @@
     	tpl.overwrite(scheduleBody, [1,2,3,4,5,6,7,8,9,10,11,12])
     	
 		Ext.Ajax.request({
-			url: 'data/queryStudentsCurriculum.js',
-//			url: 'http://202.107.226.170/interface.do?json=[{%22skzs%22%3A%221%22%2C%22xh%22%3A%221101301307%22}]&m=queryStudentsCurriculum',
-			params: {},
+//			url: 'data/queryStudentsCurriculum.js',
+			url: URL,
+			disableCaching: false,
+			params: {
+				json: Ext.encode([{
+					xh: ID,
+					skzs: '7' //todo 第几周
+				}]),
+				m: 'queryStudentsCurriculum'
+			},
 			success: function(r){
 				var DAY = ['周日','周一','周二','周三','周四','周五','周六'],
 					DH = Ext.DomHelper,
@@ -303,8 +331,15 @@
         
         // search
         Ext.Ajax.request({
-        	url: 'data/myEasyCard.js',
-        	params: {},
+//        	url: 'data/myEasyCard.js',
+        	url: URL,
+        	disableCaching: false,
+        	params: {
+        		json: Ext.encode([{
+        			gxh: ID
+        		}]),
+        		m: 'myEasyCard'
+        	},
         	success: function(r){
         		var o = JSON.parse(r.responseText),
         			ye = o.easyCard.ye;
@@ -312,11 +347,32 @@
         	}
         });
     },
+    getValue = function(id, plus){
+    	var cmp = Ext.getCmp(id),
+    		date = cmp.date || cmp.initialConfig.date;
+    	plus = plus ? 1 : 0;
+    	plus *= 1000*3600*24;
+    	return date.getTime() + plus;
+    },
 	cardSearch = function(){
+    	var start = getValue('start'),
+    		end = getValue('end', true);
+    	
 		// search
         Ext.Ajax.request({
-        	url: 'data/listTransactionFlow.js',
-        	params: {},
+//        	url: 'data/listTransactionFlow.js',
+        	url: URL,
+        	disableCaching: false,
+        	params: {
+        		json: Ext.encode([{
+        			startTime: start,
+        			endTime: end,
+        			gxh: ID,
+        			start: '1',
+        			pageLength: '10000'
+        		}]),
+        		m: 'listTransactionFlow'
+        	},
         	success: function(r){
         		var o = JSON.parse(r.responseText),
         			list = o.transactionFlowList,
@@ -336,20 +392,59 @@
         });
 	},
 	termPickerFn = function(p, value){
+		value = value.term;
+		var vals = value.split(',');
+		
+		Ext.getCmp('score-title').setTitle(vals[0]);
+		
+		var scoreList = Ext.getCmp('score-list');
+		
+		//mask
+		var scoreTab = Ext.getCmp('score').setMasked(true);
+		
 		Ext.Ajax.request({
-        	url: 'data/searchAchievement.js',
-        	params: {},
+//        	url: 'data/searchAchievement.js',
+        	url: URL,
+        	disableCaching: false,
+        	params: {
+        		json: Ext.encode([{
+        			xh: ID,
+        			xn: vals[1],
+        			kcjd: '',
+        			xm: '',
+        			xq: vals[2],
+        			kcdm: '',
+        			pageLength: '',
+        			cxbj: '',
+        			start: '',
+        			cj: '',
+        			zscj: '',
+        			bjdm: '',
+        			kcmc: '',
+        			xf: ''
+        		}]),
+        		m: 'searchAchievement'
+        	},
         	success: function(r){
         		var o = JSON.parse(r.responseText),
         			list = o.achievementList;
+        		if(list.length){
+        			store.setData(list);
+        			scoreList.removeCls('list-hidden');
+        		}else{
+        			store.setData(null);
+        			scoreList.addCls('list-hidden');
+        		};
+        	},
+        	failure: function(){
+        		store.removeAll(true);
+        	},
+        	callback: function(){
+        		scoreTab.setMasked(false);
         	}
         });
     },store = Ext.create('Ext.data.Store', {
-		model: 'Score',
-		
-		data: [
-		       { kcmc: 'Jason',   cj: 'Johnston'}
-		]
+		model: 'Score'
     });
 	
 })()
