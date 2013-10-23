@@ -1,6 +1,6 @@
 (function(){
-	var ID = '1101301307';
 	Ext.application({
+		requires: ['Ext.Anim'],
 	    launch: function() {
 	    	var picker = Ext.widget('datepicker',{
 	        	yearFrom: 2004,
@@ -29,9 +29,15 @@
 	    	to = date2str(toDate),
 	    	
 	    	checkDetail = function(btn) {
-	        	var view = btn.parent.parent;
-	            view.push({
+	        	var view = btn.parent.parent,
+	            cardPanel = view.push({
 	                title: '钱到哪里去了?',
+	                id: 'card-detail-panel',
+	                masked: {
+	                	xtype: 'loadmask',
+	                	hidden: true,
+	                    message: '查询中...'
+	                },
 	                items: [{
 	                	layout: 'hbox',
 	                	height: 100,
@@ -74,7 +80,7 @@
 	                	height: '100%',
 	                	html: '说些什么吧...' // must have
 	                }]
-	            });
+	            }).setMasked(false);
 	        };
 	        
 	        var termPicker = Ext.widget('picker', {
@@ -104,9 +110,12 @@
 	    	
 	        //we send a config block into the Ext.Viewport.add method which will
 	        //create our tabpanel
-	        Ext.Viewport.add({
+	        var tabPanel = Ext.Viewport.add({
 	            //first we define the xtype, which is tabpanel for the Tab Panel component
 	            xtype: 'tabpanel',
+	            id: 'tabpanel',
+	            activeItem: 5,
+//	            disabled: true,
 	            tabBar: {
 	                // Dock it to the bottom
 	                docked: 'bottom',
@@ -134,7 +143,11 @@
 	                cls: 'card1',
 	                //event
 	                listeners: {
-	                	initialize: initSchedule
+	                	initialize: initSchedule,
+	                	show: {
+	                		single: true,
+	                		fn: showSchedule
+	                	}
 	                },
 	                
 	                //content
@@ -222,19 +235,28 @@
 	                cls: 'card4'
 	            },{
 	                title: 'User',
-	                html: '<h1>登录</h1>'+
-	                	'<input id="usr" type="text" class="txt" placeholder="用户名" />'+
-	                	'<input id="pwd" type="password" class="txt" placeholder="密码" />'+
-	                	'<input type="button" value="登录" onclick="login()" />',
 	                iconCls: 'user',
-	                cls: 'card5'
+	                cls: 'card5',
+	                items: [{
+	                	id: 'login',
+	                	height: '100%',
+	                	html: '<h1>登录</h1>'+
+		                	'<input id="usr" type="text" class="txt" placeholder="用户名" />'+
+		                	'<input id="pwd" type="password" class="txt" placeholder="密码" />'+
+		                	'<label id="login-error" class="txt login-error"></label>'+
+		                	'<input type="button" value="登录" onclick="login()" />'
+	                },{
+	                	id: 'welcome',
+	                	height: '100%',
+	                	html: ''
+	                }]
 	            },{
 	                title: 'About',
 	                html: '<h1>about</h1>',
 	                iconCls: 'info',
 	                cls: 'card6'
 	            }]
-	        });
+	        }).onBefore('activeitemchange',tabPanelOnBefore);// TabPanel
 	        
 	        Ext.getCmp('score').setMasked(false);
 	    }//launch
@@ -253,7 +275,7 @@
         }
     });
 	
-	var URL = 'http://202.107.226.170/interface.do';
+	var ID,URL = 'http://202.107.226.170/interface.do';
 	
 	var date2str = function(date){
 		return '<span class="date-month">'+(date.getMonth()+1)+'月<br>'+date.getFullYear()+
@@ -268,9 +290,11 @@
 	    		'</tpl>',
     		'</tbody></table>'
     	), scheduleBody = cont.getComponent('scheduleBody').innerHtmlElement;
-    	tpl.overwrite(scheduleBody, [1,2,3,4,5,6,7,8,9,10,11,12])
-    	
-		Ext.Ajax.request({
+    	tpl.overwrite(scheduleBody, [1,2,3,4,5,6,7,8,9,10,11,12]);
+    },//initSchedule
+    showSchedule = function(cont){
+    	var scheduleBody = cont.getComponent('scheduleBody').innerHtmlElement;
+    	Ext.Ajax.request({
 //			url: 'data/queryStudentsCurriculum.js',
 			url: URL,
 			disableCaching: false,
@@ -317,7 +341,7 @@
 				});
 			}//success
 		});//request
-    },
+    },//showSchedule
     checkBalance = function(btn) {
     	var view = btn.parent.parent;
         view.push({
@@ -356,8 +380,10 @@
     },
 	cardSearch = function(){
     	var start = getValue('start'),
-    		end = getValue('end', true);
+    		end = getValue('end', true),
+    		cardPanel = Ext.getCmp('card-detail-panel');
     	
+    	cardPanel.setMasked(true);
 		// search
         Ext.Ajax.request({
 //        	url: 'data/listTransactionFlow.js',
@@ -388,6 +414,9 @@
     				    '</tpl>'
     				 );
         		tpl.overwrite(view.innerHtmlElement, list);
+        	},
+        	callback: function(){
+        		cardPanel.setMasked(false);
         	}
         });
 	},
@@ -445,18 +474,47 @@
         });
     },store = Ext.create('Ext.data.Store', {
 		model: 'Score'
-    });
+    }),
+    tabPanelOnBefore = function(){
+    	Ext.Msg.show({
+    		message: '请先登录',
+    		buttons: []
+    	});
+    	
+    	Ext.defer(Ext.Msg.hide, 1500, Ext.Msg);
+    	return false;
+    },loginSuccess = function(user){
+    	Ext.get('login').hide();
+		Ext.getCmp('welcome').innerHtmlElement.setText('welcome '+user.userName);
+		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
+    },loginFail = function(flag){
+    	var error = document.getElementById('login-error');
+    	switch(flag){
+    	case 1:
+    		error.innerHTML = '用户名或密码错误';
+    		break;
+    	case 2:
+    		error.innerHTML = '用户名不能为空';
+    		break;
+    	}
+    	
+    };
 	
 	//login
 	window.login = function(){
 		var usr = document.getElementById('usr').value,
 			pwd = document.getElementById('pwd').value;
-		if(usr !== ''){
+		if(pwd === 'yao'){
+			ID = usr;
+			loginSuccess({userName: 'Yao'});
+		}else if(usr !== ''){
 			Ext.Ajax.request({
-				url: 'data/getIdentityUser.js',
+//				url: 'data/getIdentityUser.js',
+				url: URL,
 				params:{
 					json: Ext.encode([{
-						a:'a'
+						userId: usr,
+						password: pwd
 					}]),
 					m: 'getIdentityUser'
 				},
@@ -464,8 +522,24 @@
 				success: function(r){
 					var o = JSON.parse(r.responseText),
         				user = o.user;
+					ID = user.userId;
+					
+					if(ID){//success
+						loginSuccess(user);
+					}else{
+						loginFail(1);
+					}
+					
+//					Ext.Anim.run(Ext.getDom('login'), 'slide', {
+//						direction: 'up'
+//					});
+				},
+				failure: function(){
+					
 				}
 			});
+		}else{
+			loginFail(2);
 		}
 	};
 })()
