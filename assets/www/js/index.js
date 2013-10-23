@@ -240,8 +240,18 @@
 	                items: [{
 	                	id: 'login',
 	                	height: '100%',
+	                	items: [{
+	                		xtype: 'textfield',
+	                		id: 'usr',
+	                		cls: 'login-txt',
+	                		placeHolder: '用户名'
+	                	},{
+	                		xtype: 'passwordfield',
+	                		cls: 'login-txt',
+	                		placeHolder: '密码'
+	                	}],
 	                	html: '<h1>登录</h1>'+
-		                	'<input id="usr" type="text" class="txt" placeholder="用户名" />'+
+		                	'<input id="usr" type="text" class="txt x-input-el x-form-field x-input-text" placeholder="用户名" />'+
 		                	'<input id="pwd" type="password" class="txt" placeholder="密码" />'+
 		                	'<label id="login-error" class="txt login-error"></label>'+
 		                	'<input type="button" value="登录" onclick="login()" />'
