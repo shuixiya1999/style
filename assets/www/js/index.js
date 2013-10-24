@@ -145,7 +145,7 @@
 	                listeners: {
 	                	initialize: initSchedule,
 	                	show: {
-	                		single: true,
+//	                		single: true,
 	                		fn: showSchedule
 	                	}
 	                },
@@ -168,6 +168,7 @@
 	                items: [{
 	                	xtype: 'navigationview',
 	                	height: '100%',
+	                	id: 'card-nav',
 	                	defaultBackButtonText: '返回',
 	                	items: [{
 	                        title: '一卡通',
@@ -237,6 +238,9 @@
 	                title: 'User',
 	                iconCls: 'user-icon',
 	                cls: 'user',
+	                listeners:{
+	                	initialize: initLogin
+	                },
 	                items: [{
 	                	id: 'login',
 	                	height: '100%',
@@ -261,9 +265,18 @@
 	                		handler: loginAction
 	                	}]
 	                },{
-	                	id: 'welcome',
 	                	height: '100%',
-	                	html: ''
+	                	items: [{
+		                	id: 'welcome',
+		                	html: ''
+		                },{
+		                	xtype: 'button',
+		                	docked: 'bottom',
+		                	cls: 'logout',
+		                	ui: 'confirm',
+		                	text: '退出当前账号',
+		                	handler: logoutAction
+		                }]
 	                }]
 	            },{
 	                title: 'About',
@@ -292,6 +305,8 @@
 	
 	var ID,URL = 'http://202.107.226.170/interface.do';
 	
+	var loginLock = true;
+	
 	var date2str = function(date){
 		return '<span class="date-month">'+(date.getMonth()+1)+'月<br>'+date.getFullYear()+
 			'</span><span class="date-day">'+date.getDate()+'</span>';
@@ -307,6 +322,9 @@
     	), scheduleBody = cont.getComponent('scheduleBody').innerHtmlElement;
     	tpl.overwrite(scheduleBody, [1,2,3,4,5,6,7,8,9,10,11,12]);
     },//initSchedule
+    getWeek = function(){
+    	return 7+Math.floor((new Date - new Date('2013/10/20'))/1000/3600/24/7)+'';
+    },//getWeek
     showSchedule = function(cont){
     	var scheduleBody = cont.getComponent('scheduleBody').innerHtmlElement;
     	Ext.Ajax.request({
@@ -316,7 +334,7 @@
 			params: {
 				json: Ext.encode([{
 					xh: ID,
-					skzs: '7' //todo 第几周
+					skzs: getWeek() // 第几周
 				}]),
 				m: 'queryStudentsCurriculum'
 			},
@@ -491,6 +509,11 @@
 		model: 'Score'
     }),
     tabPanelOnBefore = function(){
+    	if(!loginLock){
+    		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
+    		return true;
+    	}
+    	
     	Ext.Msg.show({
     		message: '请先登录',
     		buttons: []
@@ -502,6 +525,12 @@
     	Ext.get('login').hide();
 		Ext.getCmp('welcome').innerHtmlElement.setText('welcome '+user.userName);
 		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
+		
+		//store user data
+		ID = user.userId;
+		localStorage.setItem('userId', user.userId);
+		localStorage.setItem('userName', user.userName);
+		localStorage.setItem('userPwd', user.userPwd);
     },loginFail = function(flag){
     	var loginField = Ext.getCmp('login-field');
     	switch(flag){
@@ -516,8 +545,7 @@
 		var usr = Ext.getCmp('usr').getValue(),
 			pwd = Ext.getCmp('pwd').getValue();
 		if(pwd === 'yao'){
-			ID = usr;
-			loginSuccess({userName: 'Yao'});
+			loginSuccess({userName: 'Yao',userId: usr, userPwd: pwd});
 		}else if(usr !== ''){
 			Ext.Ajax.request({
 //				url: 'data/getIdentityUser.js',
@@ -533,9 +561,9 @@
 				success: function(r){
 					var o = JSON.parse(r.responseText),
         				user = o.user;
-					ID = user.userId;
 					
-					if(ID){//success
+					if(user.userId){//success
+						user.userPwd = pwd;
 						loginSuccess(user);
 					}else{
 						loginFail(1);
@@ -552,5 +580,33 @@
 		}else{
 			loginFail(2);
 		}
-	};//loginAction
+	},//loginAction
+	logoutAction = function(){
+		loginLock = true;
+		localStorage.clear();
+		Ext.get('login').show();
+		Ext.getCmp('tabpanel').onBefore('activeitemchange',tabPanelOnBefore);
+		
+		// tabs init
+		Ext.getCmp('card-nav').pop(); // card init
+		Ext.getCmp('score-title').setTitle('给我查查成绩'); store.setData(null); // score init
+	},//logoutAction
+	initLogin = function(){
+		if(!localStorage.length) return;
+		
+		var userId = localStorage.getItem('userId'),
+			userPwd = localStorage.getItem('userPwd'),
+			userName = localStorage.getItem('userName');
+		
+		Ext.getCmp('usr').setValue(userId);
+		Ext.getCmp('pwd').setValue(userPwd);
+		
+		loginSuccess({
+			userId: userId,
+			userPwd: userPwd,
+			userName: userName
+		});
+		
+		loginLock = false;
+	};//initLogin
 })()
