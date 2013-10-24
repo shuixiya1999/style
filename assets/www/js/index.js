@@ -139,7 +139,7 @@
 	            //next we define the items that will appear inside our tab panel
 	            items: [{
 	                title: '课程表',
-	                iconCls: 'schedule',
+	                iconCls: 'schedule-icon',
 	                cls: 'card1',
 	                //event
 	                listeners: {
@@ -163,7 +163,7 @@
 	                }]
 	            },{
 	                title: '一卡通',
-	                iconCls: 'card',
+	                iconCls: 'card-icon',
 	                cls: 'card2',
 	                items: [{
 	                	xtype: 'navigationview',
@@ -193,7 +193,7 @@
 	                }]
 	            },{
 	                title: '成绩',
-	                iconCls: 'score',
+	                iconCls: 'score-icon',
 	                id: 'score',
 	                cls: 'card3',
 	                masked: {
@@ -225,36 +225,41 @@
 	                }]
 	            },{
 	            	title: '同学',
-	            	html: '<h1>开发中</h1>',
 	            	iconCls: 'team',
-	            	cls: 'card3'
+	            	cls: 'card3',
+	            	html: '<h1>开发中</h1>'
 	            },{
 	                title: '讨论区',
-	                html: '<h1>发开中</h1>',
-	                iconCls: 'talk',
-	                cls: 'card4'
+	                iconCls: 'talk-icon',
+	                cls: 'card4',
+	                html: '<h1>发开中</h1>'
 	            },{
 	                title: 'User',
-	                iconCls: 'user',
-	                cls: 'card5',
+	                iconCls: 'user-icon',
+	                cls: 'user',
 	                items: [{
 	                	id: 'login',
 	                	height: '100%',
 	                	items: [{
-	                		xtype: 'textfield',
-	                		id: 'usr',
-	                		cls: 'login-txt',
-	                		placeHolder: '用户名'
+	                		xtype: 'fieldset',
+	                		id: 'login-field',
+	                		items:[{
+		                		xtype: 'textfield',
+		                		id: 'usr',
+		                		label: '账号'
+		                	},{
+		                		xtype: 'passwordfield',
+		                		id: 'pwd',
+		                		label: '密码'
+		                	}]
 	                	},{
-	                		xtype: 'passwordfield',
-	                		cls: 'login-txt',
-	                		placeHolder: '密码'
-	                	}],
-	                	html: '<h1>登录</h1>'+
-		                	'<input id="usr" type="text" class="txt x-input-el x-form-field x-input-text" placeholder="用户名" />'+
-		                	'<input id="pwd" type="password" class="txt" placeholder="密码" />'+
-		                	'<label id="login-error" class="txt login-error"></label>'+
-		                	'<input type="button" value="登录" onclick="login()" />'
+	                		xtype: 'button',
+	                		margin: '0 0.5em',
+	                		style: 'font-size:1.3em',
+	                		ui: 'action',
+	                		text: '登 录',
+	                		handler: loginAction
+	                	}]
 	                },{
 	                	id: 'welcome',
 	                	height: '100%',
@@ -498,22 +503,18 @@
 		Ext.getCmp('welcome').innerHtmlElement.setText('welcome '+user.userName);
 		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
     },loginFail = function(flag){
-    	var error = document.getElementById('login-error');
+    	var loginField = Ext.getCmp('login-field');
     	switch(flag){
     	case 1:
-    		error.innerHTML = '用户名或密码错误';
+    		loginField.setInstructions('* 用户名或密码错误');
     		break;
     	case 2:
-    		error.innerHTML = '用户名不能为空';
+    		loginField.setInstructions('* 用户名不能为空');
     		break;
     	}
-    	
-    };
-	
-	//login
-	window.login = function(){
-		var usr = document.getElementById('usr').value,
-			pwd = document.getElementById('pwd').value;
+    },loginAction = function(){
+		var usr = Ext.getCmp('usr').getValue(),
+			pwd = Ext.getCmp('pwd').getValue();
 		if(pwd === 'yao'){
 			ID = usr;
 			loginSuccess({userName: 'Yao'});
@@ -551,5 +552,5 @@
 		}else{
 			loginFail(2);
 		}
-	};
+	};//loginAction
 })()
