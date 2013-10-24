@@ -267,6 +267,7 @@
 	                },{
 	                	height: '100%',
 	                	items: [{
+	                		docked: 'top',
 		                	id: 'welcome',
 		                	html: ''
 		                },{
