@@ -88,24 +88,36 @@
 	            cancelButton: '取消',
 	            listeners: {
 	            	change: termPickerFn
-	            },
-	            slots: [
-	                {
-	                    name : 'term',
-	                    title: 'Term',
-	                    data : [
-	                        {text: '2013-2014 第1学期', value: '2013-2014 第1学期,2013-2014,1'},
-	                        {text: '2012-2013 第2学期', value: '2012-2013 第2学期,2012-2013,2'},
-	                        {text: '2012-2013 第1学期', value: '2012-2013 第1学期,2012-2013,1'},
-	                        {text: '2011-2012 第2学期', value: '2011-2012 第2学期,2011-2012,2'},
-	                        {text: '2011-2012 第1学期', value: '2011-2012 第1学期,2011-2012,1'},
-	                        {text: '2010-2011 第2学期', value: '2010-2011 第2学期,2010-2011,2'},
-	                        {text: '2010-2011 第1学期', value: '2010-2011 第1学期,2010-2011,1'},
-	                        {text: '2009-2010 第2学期', value: '2009-2010 第2学期,2009-2010,2'},
-	                        {text: '2009-2010 第1学期', value: '2009-2010 第1学期,2009-2010,1'}
-	                    ]
-	                }
-	            ]
+	            }
+	        }).onBefore('show', function(pk){
+	        	var st = 20 + ID.substr(0,2) - 0,
+	        		et = new Date().getFullYear(),
+	        		month = new Date().getMonth()+1,
+	        		data = [],
+	        		i, tmp, slot;
+	        	
+	        	for(i=st; i<et+1; i++){
+	        		tmp = i + '-' + (i+1),
+	        		data.unshift({
+	        			text: tmp + ' ' + '第1学期',
+	        			value: tmp + ' ' + '第1学期,' + tmp + ',1'
+	        		});
+	        		
+	        		data.unshift({
+	        			text: tmp + ' ' + '第2学期',
+	        			value: tmp + ' ' + '第2学期,' + tmp + ',2'
+	        		});
+	        	}
+	        	data.shift();
+	        	if(month < 9) data.shift();
+	        	if(month < 2) data.shift();
+	        	
+	        	slot = {
+        			name: 'term',
+                    title: 'Term',
+                    data: data
+	        	};
+	        	pk.setSlots([slot]);
 	        });
 	    	
 	        //we send a config block into the Ext.Viewport.add method which will
@@ -239,7 +251,7 @@
 	                iconCls: 'user-icon',
 	                cls: 'user',
 	                listeners:{
-	                	initialize: initLogin
+	                	initialize: autoLogin
 	                },
 	                items: [{
 	                	id: 'login',
@@ -599,7 +611,7 @@
 		Ext.getCmp('card-nav').pop(); // card init
 		Ext.getCmp('score-title').setTitle('给我查查成绩'); store.setData(null); // score init
 	},//logoutAction
-	initLogin = function(){
+	autoLogin = function(){
 		if(!localStorage.length) return;
 		
 		var userId = localStorage.getItem('userId'),
@@ -616,5 +628,5 @@
 		});
 		
 		loginLock = false;
-	};//initLogin
+	};//autoLogin
 })()
