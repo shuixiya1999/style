@@ -523,7 +523,13 @@
     	Ext.defer(Ext.Msg.hide, 1500, Ext.Msg);
     	return false;
     },loginSuccess = function(user){
-    	Ext.get('login').hide();
+    	Ext.getCmp('login').hide({
+    		type: 'slide',
+    		out: true,
+    		direction: 'up',
+    		easing: '.13, .63, .66, 1.43',
+    		duration: 1000
+    	});
 		Ext.getCmp('welcome').innerHtmlElement.setText('welcome '+user.userName);
 		Ext.getCmp('tabpanel').unBefore('activeitemchange',tabPanelOnBefore);
 		
@@ -569,10 +575,6 @@
 					}else{
 						loginFail(1);
 					}
-					
-//					Ext.Anim.run(Ext.getDom('login'), 'slide', {
-//						direction: 'up'
-//					});
 				},
 				failure: function(){
 					
@@ -585,7 +587,12 @@
 	logoutAction = function(){
 		loginLock = true;
 		localStorage.clear();
-		Ext.get('login').show();
+		Ext.getCmp('login').show({
+			type: 'slide',
+			direction: 'down',
+			easing: '.13, .63, .66, 1.43',
+			duration: 1000
+		});
 		Ext.getCmp('tabpanel').onBefore('activeitemchange',tabPanelOnBefore);
 		
 		// tabs init
