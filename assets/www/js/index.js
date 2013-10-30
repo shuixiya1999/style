@@ -86,39 +86,11 @@
 	        var termPicker = Ext.widget('picker', {
 	            doneButton: '完成',
 	            cancelButton: '取消',
+	            height: 300,
 	            listeners: {
 	            	change: termPickerFn
 	            }
-	        }).onBefore('show', function(pk){
-	        	var st = 20 + ID.substr(0,2) - 0,
-	        		et = new Date().getFullYear(),
-	        		month = new Date().getMonth()+1,
-	        		data = [],
-	        		i, tmp, slot;
-	        	
-	        	for(i=st; i<et+1; i++){
-	        		tmp = i + '-' + (i+1),
-	        		data.unshift({
-	        			text: tmp + ' ' + '第1学期',
-	        			value: tmp + ' ' + '第1学期,' + tmp + ',1'
-	        		});
-	        		
-	        		data.unshift({
-	        			text: tmp + ' ' + '第2学期',
-	        			value: tmp + ' ' + '第2学期,' + tmp + ',2'
-	        		});
-	        	}
-	        	data.shift();
-	        	if(month < 9) data.shift();
-	        	if(month < 2) data.shift();
-	        	
-	        	slot = {
-        			name: 'term',
-                    title: 'Term',
-                    data: data
-	        	};
-	        	pk.setSlots([slot]);
-	        });
+	        }).onBefore('show', termPickerShow);
 	    	
 	        //we send a config block into the Ext.Viewport.add method which will
 	        //create our tabpanel
@@ -628,5 +600,44 @@
 		});
 		
 		loginLock = false;
-	};//autoLogin
+	},//autoLogin
+	termPickerShow = function(pk){
+    	var st = 20 + ID.substr(0,2) - 0,
+    		et = new Date().getFullYear(),
+    		month = new Date().getMonth()+1,
+    		data = [],
+    		sft = true,
+    		i, tmp, slot;
+    	
+    	for(i=st; i<et+1; i++){
+    		if(i-st === 4){
+    			sft = false;
+    			break;
+    		}
+    		tmp = i + '-' + (i+1),
+    		data.unshift({
+    			text: tmp + ' ' + '第1学期',
+    			value: tmp + ' ' + '第1学期,' + tmp + ',1'
+    		});
+    		
+    		data.unshift({
+    			text: tmp + ' ' + '第2学期',
+    			value: tmp + ' ' + '第2学期,' + tmp + ',2'
+    		});
+    	}
+    	if(sft){
+    		data.shift();
+        	if(month < 9) data.shift();
+        	if(month < 2) data.shift();
+    	}else if(month < 2 && et-st === 4){
+    		data.shift();
+    	}
+    	
+    	slot = {
+			name: 'term',
+            title: 'Term',
+            data: data
+    	};
+    	pk.setSlots([slot]);
+    };//termPickerShow
 })()
