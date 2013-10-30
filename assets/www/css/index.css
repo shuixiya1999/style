@@ -1,5 +1,15 @@
 body{background-color:#333;color:#333;}
 input,textarea{color:#333}
+
+/* common */
+/* userfield */
+.x-more-icon{position:absolute;display:none;top:0;right:0;width:2.2em;height:2.2em;color:#999;text-align:center;-moz-transform:rotate(-90deg)}
+.more-able{padding-right:2.2em}
+.more-able .x-more-icon{display:block}
+.user-list{position:absolute;width:100%;background-color:#F1F1F1;border-left:1px solid #ddd;border-right:1px solid #ddd;z-index:1;}
+.user-list .user-item{height:68px;line-height:68px;border-bottom:1px solid #ddd;text-align:left;}
+.x-form-fieldset .x-form-fieldset-inner{overflow:visible;}/*override*/
+
 .card1,.card2,.card3,.card4,.user{font-size:14px}
 .x-phone .card1,.x-phone .card2,.x-phone .card3,.x-phone .card4,.x-phone .user{/*font-size:36px*/}
 .card1,.card2,.card3,.card4,.user,.card6{text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;}

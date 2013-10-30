@@ -232,7 +232,7 @@
 	                		xtype: 'fieldset',
 	                		id: 'login-field',
 	                		items:[{
-		                		xtype: 'textfield',
+		                		xtype: 'userfield',
 		                		id: 'usr',
 		                		labelCls: 'login-lbl',
 		                		label: '账号'
@@ -586,7 +586,7 @@
 		Ext.getCmp('score-title').setTitle('给我查查成绩'); store.setData(null); // score init
 	},//logoutAction
 	autoLogin = function(){
-		if(!localStorage.length) return;
+		if(!localStorage.getItem('userPwd')) return;
 		
 		var userId = localStorage.getItem('userId'),
 			userPwd = localStorage.getItem('userPwd'),
