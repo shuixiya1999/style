@@ -234,10 +234,12 @@
 	                		items:[{
 		                		xtype: 'textfield',
 		                		id: 'usr',
+		                		labelCls: 'login-lbl',
 		                		label: '账号'
 		                	},{
 		                		xtype: 'passwordfield',
 		                		id: 'pwd',
+		                		labelCls: 'login-lbl',
 		                		label: '密码'
 		                	}]
 	                	},{

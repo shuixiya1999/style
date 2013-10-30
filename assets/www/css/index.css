@@ -1,4 +1,5 @@
-body{background-color:#333}
+body{background-color:#333;color:#333;}
+input,textarea{color:#333}
 .card1,.card2,.card3,.card4,.user{font-size:14px}
 .x-phone .card1,.x-phone .card2,.x-phone .card3,.x-phone .card4,.x-phone .user{/*font-size:36px*/}
 .card1,.card2,.card3,.card4,.user,.card6{text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;}
@@ -61,3 +62,4 @@ h1{font-weight:bold}
 .user .x-input-el{background-color:transparent}
 .user .x-input-password:focus{outline:none}
 .user .logout{margin: 0.6em 0.3em}
+.user .login-lbl{color:#999}
