@@ -121,7 +121,7 @@
 	            ui: 'light',
 
 	            //next we define the items that will appear inside our tab panel
-	            items: [{
+	            items: [{//schedule
 	                title: '课程表',
 	                iconCls: 'schedule-icon',
 	                cls: 'card1',
@@ -145,7 +145,7 @@
 	                	itemId: 'scheduleBody',
 	                	html: ''
 	                }]
-	            },{
+	            },{//card
 	                title: '一卡通',
 	                iconCls: 'card-icon',
 	                cls: 'card2',
@@ -176,7 +176,7 @@
 	                        }]
 	                    }]
 	                }]
-	            },{
+	            },{//score
 	                title: '成绩',
 	                iconCls: 'score-icon',
 	                id: 'score',
