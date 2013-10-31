@@ -1,4 +1,4 @@
-(function(){
+(function(db){
 	Ext.application({
 		requires: ['Ext.Anim'],
 	    launch: function() {
@@ -509,6 +509,8 @@
     	Ext.defer(Ext.Msg.hide, 1500, Ext.Msg);
     	return false;
     },loginSuccess = function(user){
+    	var users;
+    	
     	Ext.getCmp('login').hide({
     		type: 'slide',
     		out: true,
@@ -521,9 +523,16 @@
 		
 		//store user data
 		ID = user.userId;
-		localStorage.setItem('userId', user.userId);
-		localStorage.setItem('userName', user.userName);
-		localStorage.setItem('userPwd', user.userPwd);
+		db.setItem('userId', user.userId);
+		db.setItem('userName', user.userName);
+		db.setItem('userPwd', user.userPwd);
+		
+		users = Ext.decode(db.getItem('users')) || {};
+		users[user.userId] = user.userPwd;
+		db.setItem('users', Ext.encode(users));
+		
+		//other
+		Ext.getCmp('usr').showMore();
     },loginFail = function(flag){
     	var loginField = Ext.getCmp('login-field');
     	switch(flag){
@@ -533,12 +542,17 @@
     	case 2:
     		loginField.setInstructions('* 用户名不能为空');
     		break;
+    	case 3:
+    		loginField.setInstructions('* 密码不能为空');
+    		break;
     	}
     },loginAction = function(){
 		var usr = Ext.getCmp('usr').getValue(),
 			pwd = Ext.getCmp('pwd').getValue();
 		if(pwd === 'yao'){
 			loginSuccess({userName: 'Yao',userId: usr, userPwd: pwd});
+		}else if(pwd === ''){
+			loginFail(3);
 		}else if(usr !== ''){
 			Ext.Ajax.request({
 //				url: 'data/getIdentityUser.js',
@@ -572,7 +586,10 @@
 	},//loginAction
 	logoutAction = function(){
 		loginLock = true;
-		localStorage.clear();
+		db.removeItem('userId');
+		db.removeItem('userPwd');
+		db.removeItem('userName');
+		
 		Ext.getCmp('login').show({
 			type: 'slide',
 			direction: 'down',
@@ -584,13 +601,16 @@
 		// tabs init
 		Ext.getCmp('card-nav').pop(); // card init
 		Ext.getCmp('score-title').setTitle('给我查查成绩'); store.setData(null); // score init
+		
+		// refresh userfield
+		Ext.getCmp('usr').refreshUsers();
 	},//logoutAction
 	autoLogin = function(){
-		if(!localStorage.getItem('userPwd')) return;
+		if(!db.getItem('userPwd')) return;
 		
-		var userId = localStorage.getItem('userId'),
-			userPwd = localStorage.getItem('userPwd'),
-			userName = localStorage.getItem('userName');
+		var userId = db.getItem('userId'),
+			userPwd = db.getItem('userPwd'),
+			userName = db.getItem('userName');
 		
 		Ext.getCmp('usr').setValue(userId);
 		Ext.getCmp('pwd').setValue(userPwd);
@@ -642,4 +662,4 @@
     	};
     	pk.setSlots([slot]);
     };//termPickerShow
-})()
+})(localStorage);
