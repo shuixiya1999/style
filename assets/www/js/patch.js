@@ -48,8 +48,9 @@ Ext.viewport.Default.prototype.doBlurInput = function(e) {
 						Ext.getCmp('pwd').setValue(pwd);
 					}else if(cls === 'clear-icon'){// delete user
 						// part1 clear dom
-						dom.parentNode.remove();
-						name = dom.parentNode.textContent;
+						dom = dom.parentNode;
+						name = dom.textContent;
+						dom.parentNode.removeChild(dom);
 						
 						// part2 clear db
 						delete users[name];
