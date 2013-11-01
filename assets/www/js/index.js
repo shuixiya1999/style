@@ -527,9 +527,9 @@
 		db.setItem('userName', user.userName);
 		db.setItem('userPwd', user.userPwd);
 		
-		users = Ext.decode(db.getItem('users')) || {};
+		users = db.get('users') || {};
 		users[user.userId] = user.userPwd;
-		db.setItem('users', Ext.encode(users));
+		db.set('users', users);
 		
 		//other
 		Ext.getCmp('usr').showMore();
@@ -586,9 +586,7 @@
 	},//loginAction
 	logoutAction = function(){
 		loginLock = true;
-		db.removeItem('userId');
-		db.removeItem('userPwd');
-		db.removeItem('userName');
+		db.remove('userId','userPwd','userName');
 		
 		Ext.getCmp('login').show({
 			type: 'slide',
@@ -662,4 +660,4 @@
     	};
     	pk.setSlots([slot]);
     };//termPickerShow
-})(localStorage);
+})(db);

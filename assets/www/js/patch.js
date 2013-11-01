@@ -8,6 +8,42 @@ Ext.viewport.Default.prototype.doBlurInput = function(e) {
 	}
 };
 
+/**
+ * @class DB
+ * @extends localStorage
+ */
+(function(win){
+	Ext.define('DB',{
+		constructor: function(){
+			this.db = win.localStorage;
+		},
+		getItem: function(key){
+			return this.db.getItem(key);
+		},
+		setItem: function(key, value){
+			this.db.setItem(key, value);
+		},
+		removeItem: function(key){
+			this.db.removeItem(key);
+		},
+		get: function(key){
+			return Ext.decode(this.db.getItem(key));
+		},
+		set: function(key, value){
+			this.db.setItem(key, Ext.encode(value));
+		},
+		remove: function(){
+			for(var i=0;i<arguments.length;i++){
+				this.db.removeItem(arguments[i]);
+			}
+		}
+	});
+	win.db = new DB;
+})(window);
+
+/**
+ * @class Yao.field.User
+ */
 (function(db){
 	Ext.define('Yao.field.User', {
 		extend: 'Ext.field.Text',
@@ -54,7 +90,7 @@ Ext.viewport.Default.prototype.doBlurInput = function(e) {
 						
 						// part2 clear db
 						delete users[name];
-						db.setItem('users', Ext.encode(users));
+						db.set('users', users)
 						
 						// part3 more
 						if(!this.list.getHtml()) this.hideMore();
@@ -77,7 +113,7 @@ Ext.viewport.Default.prototype.doBlurInput = function(e) {
 		refreshUsers: function(){
 			// todo
 			// 共同维护一个users
-			var users = Ext.decode(db.getItem('users')),
+			var users = db.get('users'),
 				name,pwd;
 			
 			this.list.setHtml('');
@@ -97,4 +133,4 @@ Ext.viewport.Default.prototype.doBlurInput = function(e) {
 			return users;
 		}//refreshUsers
 	});
-})(localStorage);
+})(db);
