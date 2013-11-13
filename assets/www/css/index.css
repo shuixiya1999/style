@@ -2,7 +2,7 @@
 body{background-color:#333;color:#333;}
 input,textarea{color:#333}
 .hide{display:none}
-body.x-desktop{font-size:163%}
+body.x-desktop{font-size:163%}/*override*/
 /* userfield */
 .x-more-icon{position:absolute;display:none;top:0;right:0;width:1.4em;height:2.2em;color:#999;text-align:center;-moz-transform:rotate(-90deg);-webkit-transform:rotate(-90deg)}
 .more-able{padding-right:2.2em}
@@ -15,7 +15,7 @@ body.x-desktop{font-size:163%}
 .x-field-input .x-clear-icon{background:none;width:60px;line-height:2.2em;font-family: "Pictos";font-size:1.4em;color:#D9D9D9}/*override*/
 .x-field-input .x-clear-icon:before{content:"D";}/*override*/
 
-.card1,.card2,.card3,.card4,.user{font-size:14px}
+.card1,.card2,.card3,.card4,.user{font-size:.6em}
 .card2 .x-toolbar,.card3 .x-toolbar{font-size:1.3em;}
 .x-phone .card1,.x-phone .card2,.x-phone .card3,.x-phone .card4,.x-phone .user{/*font-size:36px*/}
 .card1,.card2,.card3,.card4,.user,.card6{text-shadow:rgba(255,255,255,0.2) 0 1px 0;text-align:center;}
@@ -36,10 +36,11 @@ h1{font-weight:bold}
 .x-tab .x-button-icon.schedule-icon:before{content: "l";}
 
 /* override */
-.x-tabbar-inner .x-tab.x-tab-icon .x-button-label{font-size:1em;line-height: 15px;}
-.x-tabbar.x-docked-bottom{height:90px}
-.x-tab{width:113px;}
-.x-tabbar.x-docked-bottom .x-tab .x-button-icon{font-size:2.1em}
+.x-tabbar-inner .x-tab.x-tab-icon .x-button-label{font-size:.7em;line-height: .7em;}
+.x-tabbar.x-docked-bottom{height:3.5em}
+.x-tab{width:4.3em;}
+
+.x-tabbar.x-docked-bottom .x-tab .x-button-icon{font-size:1.5em}
 .x-toolbar .x-button .x-button-label, .x-toolbar .x-button .x-badge{font-size: 1em;}
 
 /* schedule */
@@ -55,7 +56,7 @@ h1{font-weight:bold}
 .schedule_grid tbody tr th,.schedule_grid tbody tr td{border:1px solid #ccc;}
 .schedule_grid tbody tr td{vertical-align: top;}
 .schedule_grid .courseWrap{position:absolute;margin:2px;}
-.schedule_grid .course{display:table-cell;padding:0 7px;border-radius:5px;vertical-align: middle;color:#eee;}
+.schedule_grid .course{display:table-cell;border-radius:5px;vertical-align: middle;color:#eee;}
 
 /* card */
 .card-total .x-innerhtml {padding:30px;font-size: 3em;}
