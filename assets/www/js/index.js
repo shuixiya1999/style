@@ -109,6 +109,8 @@
 	                    pack: 'center',
 	                    align: 'center'
 	                },
+	                
+	                hidden: true,
 
 	                // Make the tabbar scrollable horizontally, and disabled the indicators
 	                scrollable: {
@@ -533,6 +535,7 @@
 		
 		//other
 		Ext.getCmp('usr').showMore();
+		Ext.getCmp('tabpanel').getTabBar().show();
     },loginFail = function(flag){
     	var loginField = Ext.getCmp('login-field');
     	switch(flag){
@@ -602,6 +605,7 @@
 		
 		// refresh userfield
 		Ext.getCmp('usr').refreshUsers();
+		Ext.getCmp('tabpanel').getTabBar().hide();
 	},//logoutAction
 	autoLogin = function(){
 		if(!db.getItem('userPwd')) return;
